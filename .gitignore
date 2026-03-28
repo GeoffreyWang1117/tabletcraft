@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.eggs/
+# Model weights are too large for git (use git-lfs or HF Hub)
+models/byt5-base-akkadian/model.safetensors
+# Local config
+configs/*.yaml
+configs/*.json
+!configs/example.yaml
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.synctex*
+paper/acl-style.zip
