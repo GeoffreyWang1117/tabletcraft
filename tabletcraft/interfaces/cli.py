@@ -44,6 +44,13 @@ def main():
     p_cls = sub.add_parser("classify", help="Classify input text (name/short/historical/modern/anomalous)")
     p_cls.add_argument("text", help="Text to classify")
 
+    # --- batch: process CSV/JSONL ---
+    p_batch = sub.add_parser("batch", help="Batch process CSV/JSONL/TXT file")
+    p_batch.add_argument("input", help="Input file (csv/jsonl/txt)")
+    p_batch.add_argument("-o", "--output", default="output.jsonl", help="Output file")
+    p_batch.add_argument("--model", default=None, help="Model path")
+    p_batch.add_argument("--direction", choices=["en2ak", "ak2en"], default="en2ak")
+
     # --- info: show sign info ---
     p_info = sub.add_parser("info", help="Show cuneiform sign information")
     p_info.add_argument("sign", help="Transliteration value (e.g., 'an', 'LUGAL')")
@@ -136,6 +143,27 @@ def main():
             print(f"Warnings:")
             for w in result.warnings:
                 print(f"  - {w}")
+
+    elif args.command == "batch":
+        import logging
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(name)s | %(message)s")
+        from tabletcraft.pipeline.batch import process_batch, read_input, write_output
+
+        texts = read_input(args.input)
+        print(f"Read {len(texts)} items from {args.input}")
+
+        translator = None
+        if args.model:
+            from tabletcraft.models.translator import AkkadianTranslator
+            translator = AkkadianTranslator(args.model)
+
+        results = process_batch(texts, translator=translator, direction=args.direction)
+        write_output(results, args.output)
+
+        # Print summary
+        from collections import Counter
+        statuses = Counter(r.get("status", "unknown") for r in results)
+        print(f"Done: {dict(statuses)}")
 
     elif args.command == "info":
         from tabletcraft.knowledge.cuneiform import CuneiformConverter

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[dev]"
+
+      - name: Lint
+        run: |
+          ruff check tabletcraft/ tests/ --select E,F,W --ignore E501
+
+      - name: Test
+        run: |
+          python -m pytest tests/ -v --tb=short
+
+  sign-table-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e .
+      - name: Verify sign table
+        run: |
+          python -c "
+          from tabletcraft.knowledge.cuneiform import CuneiformConverter
+          c = CuneiformConverter()
+          assert c.num_signs >= 14000, f'Sign table too small: {c.num_signs}'
+          # Regression: key signs must exist
+          for sign in ['LUGAL', 'DINGIR', 'KUR', 'a', 'an', 'šar']:
+              info = c.get_sign_info(sign)
+              assert info is not None, f'Missing sign: {sign}'
+          print(f'Sign table OK: {c.num_signs} signs, key signs verified')
+          "
