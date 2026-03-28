@@ -1,117 +1,149 @@
 # TabletCraft
 
-**Turn any text into cuneiform clay tablets.**
+**Bridge a 4,000-year cultural gap — read and write in cuneiform.**
 
-Write like an ancient Mesopotamian scribe! TabletCraft translates text to Akkadian cuneiform and renders it as a clay tablet — bridging 4,000 years of human writing.
+TabletCraft lets you interact with humanity's oldest writing system. Translate between English and Akkadian, convert to cuneiform Unicode signs, and render clay tablet images — with built-in confidence gating that tells you when results are unreliable.
 
 ```
-English: "The mighty king rules the land"
-    -> Akkadian: šar-ru dan-nu ma-a-tam i-be-el
-    -> Cuneiform: 𒊬𒊒 𒆗𒉡 𒈠𒀀𒌓 𒄿𒁁𒂖
-    -> [Clay Tablet Image]
+$ tabletcraft cuneiform "LUGAL dan-nu LUGAL KUR aš-šur"
+𒈗 𒆗𒉡 𒈗 𒆳 𒀸𒋩
+
+$ tabletcraft classify "The computer sends an email"
+Type:       modern
+Confidence: 0.70
+Warnings:
+  - Contains 2 modern concept(s) with no direct Akkadian equivalent
 ```
 
-## Quick Start
+> All outputs are machine-generated approximations. Consult Assyriological expertise for research or public-facing use.
+
+## Install
 
 ```bash
 pip install tabletcraft
 ```
 
+## Quick Start
+
 ### CLI
 
 ```bash
-# Convert transliteration to cuneiform signs
-tabletcraft cuneiform "LUGAL dan-nu LUGAL KUR aš-šur"
-# Output: 𒈗 𒆗𒉡 𒈗 𒆳 𒀸𒋩
+# Convert transliteration to cuneiform
+tabletcraft cuneiform "LUGAL dan-nu"        # → 𒈗 𒆗𒉡
 
-# Render as a clay tablet SVG
-tabletcraft render "LUGAL dan-nu LUGAL KUR aš-šur" -o tablet.svg
+# Classify input before processing
+tabletcraft classify "The king rules"       # → short, 0.85, experience mode
 
-# Look up a cuneiform sign
-tabletcraft info LUGAL
-# Sign: LUGAL
-# Cuneiform: 𒈗
-# Unicode: U+12217
+# Render as clay tablet
+tabletcraft render "šar kiš-ša-ti" -o tablet.svg
 
-# Full pipeline: English -> clay tablet (requires model)
-tabletcraft craft "The king of Assyria" -o tablet.svg --model path/to/model
+# Full pipeline with confidence gating (requires model)
+tabletcraft craft "The king rules" --model models/byt5-base-akkadian --json
+
+# Look up a sign
+tabletcraft info LUGAL                      # → 𒈗, U+12217
 ```
 
 ### Python API
 
 ```python
-from tabletcraft import CuneiformConverter, TabletRenderer
+from tabletcraft import TabletCraft, classify
 
-# Convert transliteration -> cuneiform
-conv = CuneiformConverter()
-cuneiform = conv.to_cuneiform("LUGAL dan-nu LUGAL KUR aš-šur")
-print(cuneiform)  # 𒈗 𒆗𒉡 𒈗 𒆳 𒀸𒋩
+# Check input first
+result = classify("I love pizza")
+print(result.input_type)   # "short"
+print(result.warnings)     # []
 
-# Render as clay tablet
-renderer = TabletRenderer()
-svg = renderer.render_svg(cuneiform, title="King of Assyria")
-with open("tablet.svg", "w") as f:
-    f.write(svg)
+# Full pipeline with gating
+tc = TabletCraft(model_path="models/byt5-base-akkadian")
+result = tc.craft("The mighty king")
 
-# Full pipeline with translation (requires model)
-from tabletcraft import TabletCraft
-tc = TabletCraft(model_path="path/to/model")
-tc.craft("The mighty king", output_path="tablet.svg")
+print(result.akkadian)     # Transliteration
+print(result.cuneiform)    # Unicode cuneiform
+print(result.confidence)   # 0.0-1.0
+print(result.suggestion)   # "render" / "render_with_caveat" / "fallback"
+print(result.warnings)     # List of caveats
+
+# No model needed for transliteration → cuneiform
+result = tc.transliterate_and_render("LUGAL dan-nu", output_path="tablet.svg")
 ```
 
 ### Web Demo
 
 ```bash
 pip install tabletcraft[serve]
-python -m tabletcraft.demo --share
+python -m tabletcraft.interfaces.demo --model models/byt5-base-akkadian --share
 ```
+
+## How It Works
+
+```
+User Input
+    │
+    ▼
+Input Classifier ──→ anomalous? → REJECT
+    │
+    ▼
+ByT5 Translation (En→Ak)
+    │
+    ▼
+Output Validator ──→ unreliable? → FALLBACK (transliteration only)
+    │
+    ▼
+Cuneiform Converter (14,240 mappings)
+    │
+    ▼
+Tablet Renderer (SVG/PNG)
+    │
+    ▼
+Result + Confidence + Warnings
+```
+
+The confidence gating pipeline ensures the system **never confidently renders wrong cuneiform**. When output quality is uncertain, it degrades gracefully to transliteration-only with a warning.
 
 ## Features
 
 | Feature | Description |
 |---------|-------------|
-| Cuneiform Converter | 14,240+ transliteration-to-Unicode mappings |
-| Clay Tablet Renderer | SVG/PNG with authentic Mesopotamian styling |
-| Bidirectional NMT | English -> Akkadian and Akkadian -> English |
-| CLI Tool | One-command cuneiform conversion and rendering |
-| Web Demo | Gradio interface, deployable to HF Spaces |
-| Dictionary | 6,634 Akkadian lemmas with meanings and forms |
+| Confidence Gating | Input classification + output validation before rendering |
+| Cuneiform Converter | 14,240 transliteration→Unicode mappings, 95.3% coverage |
+| Clay Tablet Renderer | SVG/PNG with authentic Mesopotamian styling, <10ms |
+| Bidirectional NMT | English→Akkadian and Akkadian→English (ByT5-base, 49.1 BLEU) |
+| CLI | `cuneiform`, `render`, `craft`, `classify`, `info` commands |
+| Web Demo | Gradio interface with 4-panel display |
 
-## How It Works
+## Architecture
 
 ```
-     English Text
-          |
-    [ByT5 NMT Model]     <- Fine-tuned on 50K+ parallel sentences
-          |
-  Akkadian Transliteration
-          |
-  [Sign Lookup Table]     <- 14,240 mappings from academic sources
-          |
-   Cuneiform Unicode
-          |
-   [SVG Renderer]         <- Clay tablet styling with ruling lines
-          |
-    Tablet Image
+tabletcraft/
+├── pipeline/      ← Confidence gating (classifier + validator)
+├── models/        ← ByT5 bidirectional translator
+├── knowledge/     ← Sign tables + cuneiform converter
+└── interfaces/    ← CLI, web demo, SVG renderer
 ```
 
-## About
+Four decoupled layers. Swap the model, update sign tables, or add a dialect without breaking interfaces.
 
-TabletCraft was built during the [Deep Past Challenge](https://www.kaggle.com/competitions/deep-past-initiative-machine-translation) — a Kaggle competition to translate 4,000-year-old Old Assyrian business records. It packages the competition's NMT models and cuneiform data into a reusable toolkit.
+## Limitations
 
-The cuneiform sign mappings cover the Unicode Cuneiform block (U+12000-U+1254F) and are sourced from ORACC, CDLI, and the Akkademia project.
+- English→Akkadian produces **approximate modern transliterations**, not authentic ancient text
+- Trained on Neo-Assyrian/Old Babylonian data; other Akkadian dialects (e.g., Old Assyrian commercial texts) may have substantially lower quality
+- Even with 14,240 sign mappings and a 17K-lemma dictionary, **domain-specific data matters more than model size**
+- Currently English-only
 
-## License
-
-Apache 2.0. Academic data used under respective project licenses.
+See [ROADMAP.md](ROADMAP.md) for the engineering roadmap.
 
 ## Citation
 
 ```bibtex
-@software{tabletcraft2026,
-  title={TabletCraft: Turning Text into Cuneiform Clay Tablets},
+@inproceedings{tabletcraft2026,
+  title={TabletCraft: Bridging a 4,000-Year Cultural Gap with Bidirectional Akkadian NMT and Cuneiform Rendering},
   author={Wang, Geoffrey},
-  year={2026},
-  url={https://github.com/geoffreywang1117/tabletcraft}
+  booktitle={Proceedings of the 4th Workshop on Cross-Cultural Considerations in NLP (C3NLP)},
+  year={2026}
 }
 ```
+
+## License
+
+Apache 2.0
