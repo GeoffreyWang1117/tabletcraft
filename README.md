@@ -17,6 +17,60 @@ Warnings:
 
 > All outputs are machine-generated approximations. Consult Assyriological expertise for research or public-facing use.
 
+## Showcase
+
+### Reading the past: Epic of Gilgamesh → English
+
+```
+Input (Akkadian):  ša naq-ba i-mu-ru i-šid ma-a-ti ša kul-la-ta i-du-u₂
+Cuneiform:         𒊭 𒅘𒁀 𒄿𒈬𒊒 𒄿𒋃 𒈠𒀀𒋾 𒊭 𒆰𒆷𒋫 𒄿𒁺𒌑
+English:           "What Naqba saw, the fortress of all the lands, which knows all of them."
+```
+
+<p align="center">
+  <img src="assets/showcase_gilgamesh.svg" width="500" alt="Gilgamesh tablet"/>
+</p>
+
+### Writing the past: Shakespeare → Cuneiform
+
+```
+Input (English):   "To be, or not to be, that is the question"
+Akkadian:          šá-a-šú u la šá-a-šú šá-a-lu
+```
+
+```
+Input (English):   "The king sent a letter to his brother"
+Akkadian:          LUGAL a-na ŠEŠ-šu i-sap-ra
+Cuneiform:         𒈗 𒀀𒈾 𒋀𒋗 𒄿𒉺𒅁𒊏
+```
+
+<p align="center">
+  <img src="assets/showcase_royal.svg" width="500" alt="Royal inscription tablet"/>
+</p>
+
+### Confidence gating in action
+
+```
+$ tabletcraft classify "The king rules the land"
+Type:       short
+Confidence: 0.85
+Mode:       experience          ← Safe to render
+
+$ tabletcraft classify "Send me an email about the algorithm"
+Type:       modern
+Confidence: 0.70
+Mode:       educational
+Warnings:
+  - Contains 2 modern concept(s) with no direct Akkadian equivalent
+                                ← Warning: these concepts have no Akkadian equivalent
+
+$ tabletcraft classify "<script>alert(1)</script>"
+Type:       anomalous
+Confidence: 0.90
+Warnings:
+  - Input rejected              ← Blocked: anomalous input
+```
+
 ## Install
 
 ```bash
