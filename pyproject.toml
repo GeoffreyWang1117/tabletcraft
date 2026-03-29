@@ -45,3 +45,6 @@ Documentation = "https://github.com/geoffreywang1117/cuneiscribe#readme"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["cuneiscribe*"]
+
+[tool.setuptools.package-data]
+"cuneiscribe.knowledge" = ["*.json"]

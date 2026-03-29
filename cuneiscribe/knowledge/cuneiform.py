@@ -16,8 +16,8 @@ class CuneiformConverter:
         if mapping_path is None:
             # Try default locations
             candidates = [
+                Path(__file__).parent / "transliteration_mapping.json",  # Bundled in package
                 Path(__file__).parent.parent.parent / "knowledge" / "sign_tables" / "transliteration_mapping.json",
-                Path(__file__).parent.parent.parent / "dictionaries" / "processed" / "transliteration_mapping.json",
                 Path.home() / ".cuneiscribe" / "transliteration_mapping.json",
             ]
             for p in candidates:
