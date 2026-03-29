@@ -19,3 +19,6 @@ paper/*.log
 paper/*.out
 paper/*.synctex*
 paper/acl-style.zip
+
+# Paper source (separate submission)
+paper/

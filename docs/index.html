@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabletCraft — Read and Write in Cuneiform</title>
+    <style>
+        :root {
+            --clay: #C4A882;
+            --clay-dark: #8B7355;
+            --clay-light: #D4C4A8;
+            --text: #2D2A26;
+            --accent: #6B4C3B;
+            --bg: #FAF6F0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.7;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--clay-dark) 0%, var(--accent) 100%);
+            color: #FAF6F0;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3em;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+        }
+        .hero .cuneiform-display {
+            font-size: 2.4em;
+            font-family: 'Noto Sans Cuneiform', serif;
+            margin: 16px 0;
+            letter-spacing: 0.1em;
+        }
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+        .hero .badges { margin-top: 20px; }
+        .hero .badges a { margin: 0 6px; }
+        .hero .badges img { height: 24px; }
+
+        /* Section */
+        section { padding: 60px 0; }
+        section:nth-child(even) { background: #F0EBE3; }
+        h2 {
+            font-size: 1.8em;
+            color: var(--accent);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* Examples */
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 32px;
+        }
+        @media (max-width: 700px) {
+            .example-grid { grid-template-columns: 1fr; }
+        }
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .example-card h3 {
+            color: var(--accent);
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+        .example-card .label {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 0.05em;
+            margin-top: 12px;
+        }
+        .example-card .content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            background: #F8F5F0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+        .example-card .cuneiform {
+            font-family: 'Noto Sans Cuneiform', serif;
+            font-size: 1.3em;
+            letter-spacing: 0.05em;
+        }
+
+        /* Pipeline */
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 32px 0;
+        }
+        .pipeline .step {
+            background: white;
+            border: 2px solid var(--clay);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+        .pipeline .step strong { display: block; color: var(--accent); }
+        .pipeline .arrow { font-size: 1.5em; color: var(--clay-dark); }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+        @media (max-width: 700px) {
+            .features { grid-template-columns: 1fr; }
+        }
+        .feature {
+            text-align: center;
+            padding: 24px;
+        }
+        .feature .icon { font-size: 2em; margin-bottom: 12px; }
+        .feature h3 { color: var(--accent); margin-bottom: 8px; }
+
+        /* Install */
+        .install-box {
+            background: #2D2A26;
+            color: #E8E0D4;
+            border-radius: 10px;
+            padding: 24px 32px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            max-width: 500px;
+            margin: 24px auto;
+        }
+        .install-box span { color: #C4A882; }
+
+        /* Caveat */
+        .caveat {
+            background: #FFF3E0;
+            border-left: 4px solid #E65100;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 32px 0;
+            font-size: 0.95em;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--clay-dark);
+            color: var(--clay-light);
+            text-align: center;
+            padding: 32px;
+            font-size: 0.9em;
+        }
+        footer a { color: var(--clay); }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="container">
+        <h1>TabletCraft</h1>
+        <div class="cuneiform-display">𒈗 𒆗𒉡 𒈗 𒆧𒊭𒋾</div>
+        <p>Bridge a 4,000-year cultural gap.<br>Read ancient tablets. Write your own messages in cuneiform.</p>
+        <div class="badges">
+            <a href="https://github.com/GeoffreyWang1117/tabletcraft"><img src="https://img.shields.io/github/stars/GeoffreyWang1117/tabletcraft?style=social" alt="GitHub"></a>
+            <a href="https://pypi.org/project/tabletcraft/"><img src="https://img.shields.io/pypi/v/tabletcraft?color=blue" alt="PyPI"></a>
+            <a href="https://github.com/GeoffreyWang1117/tabletcraft/actions"><img src="https://github.com/GeoffreyWang1117/tabletcraft/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+        </div>
+    </div>
+</div>
+
+<!-- Examples -->
+<section>
+    <div class="container">
+        <h2>See It in Action</h2>
+        <div class="example-grid">
+            <div class="example-card">
+                <h3>Reading the Past: Epic of Gilgamesh</h3>
+                <div class="label">Akkadian Transliteration</div>
+                <div class="content">ša naq-ba i-mu-ru i-šid ma-a-ti</div>
+                <div class="label">Cuneiform</div>
+                <div class="content cuneiform">𒊭 𒅘𒁀 𒄿𒈬𒊒 𒄿𒋃 𒈠𒀀𒋾</div>
+                <div class="label">English Translation</div>
+                <div class="content">"He who saw the Deep, the foundation of the land"</div>
+            </div>
+            <div class="example-card">
+                <h3>Writing the Past: Shakespeare</h3>
+                <div class="label">English Input</div>
+                <div class="content">"To be, or not to be, that is the question"</div>
+                <div class="label">Akkadian Output</div>
+                <div class="content">šá-a-šú u la šá-a-šú šá-a-lu</div>
+                <div class="label">Meaning</div>
+                <div class="content" style="font-style: italic">"Him, and not him — to ask"</div>
+            </div>
+            <div class="example-card">
+                <h3>Royal Inscription</h3>
+                <div class="label">Transliteration</div>
+                <div class="content">LUGAL dan-nu LUGAL kiš-ša-ti LUGAL KUR aš-šur</div>
+                <div class="label">Cuneiform</div>
+                <div class="content cuneiform">𒈗 𒆗𒉡 𒈗 𒆧𒊭𒋾 𒈗 𒆳 𒀸𒋩</div>
+                <div class="label">English</div>
+                <div class="content">"Strong king, king of the universe, king of Assyria"</div>
+            </div>
+            <div class="example-card">
+                <h3>Everyday Sentence</h3>
+                <div class="label">English Input</div>
+                <div class="content">"The king sent a letter to his brother"</div>
+                <div class="label">Akkadian</div>
+                <div class="content">LUGAL a-na ŠEŠ-šu i-sap-ra</div>
+                <div class="label">Cuneiform</div>
+                <div class="content cuneiform">𒈗 𒀀𒈾 𒋀𒋗 𒄿𒉺𒅁𒊏</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pipeline -->
+<section>
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="pipeline">
+            <div class="step">
+                <strong>Input</strong>
+                English text
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="step">
+                <strong>Classify</strong>
+                Confidence gate
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="step">
+                <strong>Translate</strong>
+                ByT5 NMT
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="step">
+                <strong>Validate</strong>
+                Quality check
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="step">
+                <strong>Render</strong>
+                Clay tablet
+            </div>
+        </div>
+        <div class="caveat">
+            <strong>Reliability first:</strong> The system classifies every input, validates every output, and degrades gracefully when uncertain. A tool that says "I'm not sure" is better than one that confidently renders wrong cuneiform.
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section>
+    <div class="container">
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature">
+                <div class="icon">&#x1F4DC;</div>
+                <h3>14,240 Signs</h3>
+                <p>Comprehensive transliteration-to-cuneiform mapping with 95.3% token coverage.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#x1F500;</div>
+                <h3>Bidirectional</h3>
+                <p>Akkadian &rarr; English and English &rarr; Akkadian. Read ancient texts or write your own.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#x1F6E1;</div>
+                <h3>Confidence Gating</h3>
+                <p>Input classification + output validation. Knows when it's unreliable.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#x1F3A8;</div>
+                <h3>Tablet Renderer</h3>
+                <p>SVG/PNG clay tablets with authentic Mesopotamian styling. No GPU, &lt;10ms.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#x2328;</div>
+                <h3>CLI + API</h3>
+                <p><code>pip install tabletcraft</code>. CLI, Python API, Gradio web demo.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">&#x1F4E6;</div>
+                <h3>Batch Mode</h3>
+                <p>Process CSV/JSONL files with full logging and failure reports.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Install -->
+<section>
+    <div class="container">
+        <h2>Get Started</h2>
+        <div class="install-box">
+            <span>$</span> pip install tabletcraft<br><br>
+            <span>$</span> tabletcraft cuneiform "LUGAL dan-nu"<br>
+            𒈗 𒆗𒉡<br><br>
+            <span>$</span> tabletcraft render "šar kiš-ša-ti" -o tablet.svg
+        </div>
+        <p style="text-align: center; margin-top: 16px;">
+            <a href="https://github.com/GeoffreyWang1117/tabletcraft">GitHub</a> &middot;
+            <a href="https://github.com/GeoffreyWang1117/tabletcraft/blob/master/ROADMAP.md">Roadmap</a>
+        </p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>TabletCraft &mdash; Bridging a 4,000-year cultural gap with NLP</p>
+    <p style="margin-top: 8px;">
+        All outputs are machine-generated approximations.<br>
+        <a href="https://github.com/GeoffreyWang1117/tabletcraft">GitHub</a> &middot; Apache 2.0 License
+    </p>
+</footer>
+
+</body>
+</html>
