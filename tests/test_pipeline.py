@@ -1,13 +1,13 @@
-"""Regression tests for TabletCraft pipeline.
+"""Regression tests for CuneiScribe pipeline.
 
 These tests verify the confidence gating pipeline works correctly
 WITHOUT requiring a loaded model (tests classifier + validator + converter).
 """
 
 import pytest
-from tabletcraft.pipeline.classifier import classify, InputType
-from tabletcraft.pipeline.validator import validate
-from tabletcraft.knowledge.cuneiform import CuneiformConverter
+from cuneiscribe.pipeline.classifier import classify, InputType
+from cuneiscribe.pipeline.validator import validate
+from cuneiscribe.knowledge.cuneiform import CuneiformConverter
 
 
 # ============================================================

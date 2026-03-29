@@ -1,14 +1,14 @@
-# TabletCraft
+# CuneiScribe
 
 **Bridge a 4,000-year cultural gap — read and write in cuneiform.**
 
-TabletCraft lets you interact with humanity's oldest writing system. Translate between English and Akkadian, convert to cuneiform Unicode signs, and render clay tablet images — with built-in confidence gating that tells you when results are unreliable.
+CuneiScribe lets you interact with humanity's oldest writing system. Translate between English and Akkadian, convert to cuneiform Unicode signs, and render clay tablet images — with built-in confidence gating that tells you when results are unreliable.
 
 ```
-$ tabletcraft cuneiform "LUGAL dan-nu LUGAL KUR aš-šur"
+$ cuneiscribe cuneiform "LUGAL dan-nu LUGAL KUR aš-šur"
 𒈗 𒆗𒉡 𒈗 𒆳 𒀸𒋩
 
-$ tabletcraft classify "The computer sends an email"
+$ cuneiscribe classify "The computer sends an email"
 Type:       modern
 Confidence: 0.70
 Warnings:
@@ -51,12 +51,12 @@ Cuneiform:         𒈗 𒀀𒈾 𒋀𒋗 𒄿𒉺𒅁𒊏
 ### Confidence gating in action
 
 ```
-$ tabletcraft classify "The king rules the land"
+$ cuneiscribe classify "The king rules the land"
 Type:       short
 Confidence: 0.85
 Mode:       experience          ← Safe to render
 
-$ tabletcraft classify "Send me an email about the algorithm"
+$ cuneiscribe classify "Send me an email about the algorithm"
 Type:       modern
 Confidence: 0.70
 Mode:       educational
@@ -64,7 +64,7 @@ Warnings:
   - Contains 2 modern concept(s) with no direct Akkadian equivalent
                                 ← Warning: these concepts have no Akkadian equivalent
 
-$ tabletcraft classify "<script>alert(1)</script>"
+$ cuneiscribe classify "<script>alert(1)</script>"
 Type:       anomalous
 Confidence: 0.90
 Warnings:
@@ -74,7 +74,7 @@ Warnings:
 ## Install
 
 ```bash
-pip install tabletcraft
+pip install cuneiscribe
 ```
 
 ## Quick Start
@@ -83,25 +83,25 @@ pip install tabletcraft
 
 ```bash
 # Convert transliteration to cuneiform
-tabletcraft cuneiform "LUGAL dan-nu"        # → 𒈗 𒆗𒉡
+cuneiscribe cuneiform "LUGAL dan-nu"        # → 𒈗 𒆗𒉡
 
 # Classify input before processing
-tabletcraft classify "The king rules"       # → short, 0.85, experience mode
+cuneiscribe classify "The king rules"       # → short, 0.85, experience mode
 
 # Render as clay tablet
-tabletcraft render "šar kiš-ša-ti" -o tablet.svg
+cuneiscribe render "šar kiš-ša-ti" -o tablet.svg
 
 # Full pipeline with confidence gating (requires model)
-tabletcraft craft "The king rules" --model models/byt5-base-akkadian --json
+cuneiscribe craft "The king rules" --model models/byt5-base-akkadian --json
 
 # Look up a sign
-tabletcraft info LUGAL                      # → 𒈗, U+12217
+cuneiscribe info LUGAL                      # → 𒈗, U+12217
 ```
 
 ### Python API
 
 ```python
-from tabletcraft import TabletCraft, classify
+from cuneiscribe import CuneiScribe, classify
 
 # Check input first
 result = classify("I love pizza")
@@ -109,7 +109,7 @@ print(result.input_type)   # "short"
 print(result.warnings)     # []
 
 # Full pipeline with gating
-tc = TabletCraft(model_path="models/byt5-base-akkadian")
+tc = CuneiScribe(model_path="models/byt5-base-akkadian")
 result = tc.craft("The mighty king")
 
 print(result.akkadian)     # Transliteration
@@ -125,8 +125,8 @@ result = tc.transliterate_and_render("LUGAL dan-nu", output_path="tablet.svg")
 ### Web Demo
 
 ```bash
-pip install tabletcraft[serve]
-python -m tabletcraft.interfaces.demo --model models/byt5-base-akkadian --share
+pip install cuneiscribe[serve]
+python -m cuneiscribe.interfaces.demo --model models/byt5-base-akkadian --share
 ```
 
 ## How It Works
@@ -169,7 +169,7 @@ The confidence gating pipeline ensures the system **never confidently renders wr
 ## Architecture
 
 ```
-tabletcraft/
+cuneiscribe/
 ├── pipeline/      ← Confidence gating (classifier + validator)
 ├── models/        ← ByT5 bidirectional translator
 ├── knowledge/     ← Sign tables + cuneiform converter
@@ -190,8 +190,8 @@ See [ROADMAP.md](ROADMAP.md) for the engineering roadmap.
 ## Citation
 
 ```bibtex
-@inproceedings{tabletcraft2026,
-  title={TabletCraft: Bridging a 4,000-Year Cultural Gap with Bidirectional Akkadian NMT and Cuneiform Rendering},
+@inproceedings{cuneiscribe2026,
+  title={CuneiScribe: Bridging a 4,000-Year Cultural Gap with Bidirectional Akkadian NMT and Cuneiform Rendering},
   author={Wang, Geoffrey},
   booktitle={Proceedings of the 4th Workshop on Cross-Cultural Considerations in NLP (C3NLP)},
   year={2026}

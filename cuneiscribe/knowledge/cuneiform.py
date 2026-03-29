@@ -18,7 +18,7 @@ class CuneiformConverter:
             candidates = [
                 Path(__file__).parent.parent.parent / "knowledge" / "sign_tables" / "transliteration_mapping.json",
                 Path(__file__).parent.parent.parent / "dictionaries" / "processed" / "transliteration_mapping.json",
-                Path.home() / ".tabletcraft" / "transliteration_mapping.json",
+                Path.home() / ".cuneiscribe" / "transliteration_mapping.json",
             ]
             for p in candidates:
                 if p.exists():

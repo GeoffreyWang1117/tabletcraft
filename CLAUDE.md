@@ -1,4 +1,4 @@
-# TabletCraft
+# CuneiScribe
 
 Cuneiform clay tablet toolkit with confidence gating. Translates English↔Akkadian, converts to cuneiform Unicode, renders SVG/PNG tablets.
 
@@ -6,7 +6,7 @@ Cuneiform clay tablet toolkit with confidence gating. Translates English↔Akkad
 
 4-layer decoupled design:
 ```
-tabletcraft/
+cuneiscribe/
 ├── pipeline/          # Input classifier + output validator (confidence gating)
 │   ├── classifier.py  # Classify: name/short/historical/modern/anomalous
 │   └── validator.py   # Validate transliteration before rendering
@@ -15,7 +15,7 @@ tabletcraft/
 ├── knowledge/         # Sign tables + cuneiform converter
 │   └── cuneiform.py   # 14,240 transliteration→Unicode mappings
 ├── interfaces/        # CLI, Gradio demo, SVG renderer
-│   ├── cli.py         # Entry point: tabletcraft cuneiform/render/craft/classify/info
+│   ├── cli.py         # Entry point: cuneiscribe cuneiform/render/craft/classify/info
 │   ├── demo.py        # Gradio web app
 │   └── renderer.py    # SVG/PNG clay tablet generation
 └── core.py            # Orchestrator: classify → translate → validate → render/fallback
@@ -32,16 +32,16 @@ tabletcraft/
 
 ```bash
 # CLI
-python -m tabletcraft.interfaces.cli cuneiform "LUGAL dan-nu"
-python -m tabletcraft.interfaces.cli classify "The king rules"
-python -m tabletcraft.interfaces.cli render "šar kiš-ša-ti" -o tablet.svg
-python -m tabletcraft.interfaces.cli craft "The king rules" --model models/byt5-base-akkadian --json
+python -m cuneiscribe.interfaces.cli cuneiform "LUGAL dan-nu"
+python -m cuneiscribe.interfaces.cli classify "The king rules"
+python -m cuneiscribe.interfaces.cli render "šar kiš-ša-ti" -o tablet.svg
+python -m cuneiscribe.interfaces.cli craft "The king rules" --model models/byt5-base-akkadian --json
 
 # Tests
 python -m pytest tests/ -v
 
 # Web demo
-python -m tabletcraft.interfaces.demo --model models/byt5-base-akkadian
+python -m cuneiscribe.interfaces.demo --model models/byt5-base-akkadian
 ```
 
 ## Design principles

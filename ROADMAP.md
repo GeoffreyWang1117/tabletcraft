@@ -1,10 +1,10 @@
-# TabletCraft Engineering Roadmap
+# CuneiScribe Engineering Roadmap
 
 > Core principle: A reliable tool knows when it is unreliable — and degrades gracefully.
 
 ## Product Positioning
 
-TabletCraft is **not** an authoritative ancient language translator. It is a **cultural engagement tool** that makes cuneiform accessible while being transparent about its limitations.
+CuneiScribe is **not** an authoritative ancient language translator. It is a **cultural engagement tool** that makes cuneiform accessible while being transparent about its limitations.
 
 Three operating modes:
 

@@ -6,11 +6,11 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from tabletcraft.pipeline.classifier import classify
-from tabletcraft.pipeline.validator import validate
-from tabletcraft.knowledge.cuneiform import CuneiformConverter
+from cuneiscribe.pipeline.classifier import classify
+from cuneiscribe.pipeline.validator import validate
+from cuneiscribe.knowledge.cuneiform import CuneiformConverter
 
-logger = logging.getLogger("tabletcraft.batch")
+logger = logging.getLogger("cuneiscribe.batch")
 
 
 def process_batch(

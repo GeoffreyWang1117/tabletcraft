@@ -1,4 +1,4 @@
-"""TabletCraft CLI: translate, convert, and render with confidence gating."""
+"""CuneiScribe CLI: translate, convert, and render with confidence gating."""
 
 import argparse
 import json
@@ -8,7 +8,7 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="tabletcraft",
+        prog="cuneiscribe",
         description="Turn any text into cuneiform clay tablets — reliably.",
     )
     sub = parser.add_subparsers(dest="command", help="Available commands")
@@ -62,7 +62,7 @@ def main():
         return
 
     if args.command == "cuneiform":
-        from tabletcraft.knowledge.cuneiform import CuneiformConverter
+        from cuneiscribe.knowledge.cuneiform import CuneiformConverter
         conv = CuneiformConverter()
         text = args.text or sys.stdin.read().strip()
         if args.reverse:
@@ -71,8 +71,8 @@ def main():
             print(conv.to_cuneiform(text))
 
     elif args.command == "render":
-        from tabletcraft.knowledge.cuneiform import CuneiformConverter
-        from tabletcraft.interfaces.renderer import TabletRenderer
+        from cuneiscribe.knowledge.cuneiform import CuneiformConverter
+        from cuneiscribe.interfaces.renderer import TabletRenderer
 
         conv = CuneiformConverter()
         has_cuneiform = any(0x12000 <= ord(c) <= 0x1254F for c in args.text)
@@ -89,7 +89,7 @@ def main():
         print(f"Saved to {args.output}")
 
     elif args.command == "translate":
-        from tabletcraft.models.translator import AkkadianTranslator
+        from cuneiscribe.models.translator import AkkadianTranslator
         tr = AkkadianTranslator(args.model)
         if args.to == "en":
             print(tr.to_english(args.text))
@@ -97,8 +97,8 @@ def main():
             print(tr.to_akkadian(args.text))
 
     elif args.command == "craft":
-        from tabletcraft.core import TabletCraft
-        tc = TabletCraft(model_path=args.model)
+        from cuneiscribe.core import CuneiScribe
+        tc = CuneiScribe(model_path=args.model)
         ext = Path(args.output).suffix.lower()
         fmt = "png" if ext == ".png" else "svg"
         result = tc.craft(args.text, format=fmt, force_render=args.force,
@@ -134,7 +134,7 @@ def main():
                 print("(No tablet rendered — output did not pass validation)")
 
     elif args.command == "classify":
-        from tabletcraft.pipeline.classifier import classify
+        from cuneiscribe.pipeline.classifier import classify
         result = classify(args.text)
         print(f"Type:       {result.input_type.value}")
         print(f"Confidence: {result.confidence:.2f}")
@@ -147,14 +147,14 @@ def main():
     elif args.command == "batch":
         import logging
         logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(name)s | %(message)s")
-        from tabletcraft.pipeline.batch import process_batch, read_input, write_output
+        from cuneiscribe.pipeline.batch import process_batch, read_input, write_output
 
         texts = read_input(args.input)
         print(f"Read {len(texts)} items from {args.input}")
 
         translator = None
         if args.model:
-            from tabletcraft.models.translator import AkkadianTranslator
+            from cuneiscribe.models.translator import AkkadianTranslator
             translator = AkkadianTranslator(args.model)
 
         results = process_batch(texts, translator=translator, direction=args.direction)
@@ -166,7 +166,7 @@ def main():
         print(f"Done: {dict(statuses)}")
 
     elif args.command == "info":
-        from tabletcraft.knowledge.cuneiform import CuneiformConverter
+        from cuneiscribe.knowledge.cuneiform import CuneiformConverter
         conv = CuneiformConverter()
         info = conv.get_sign_info(args.sign)
         if info:

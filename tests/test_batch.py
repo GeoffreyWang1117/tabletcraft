@@ -3,8 +3,8 @@
 import tempfile
 from pathlib import Path
 
-from tabletcraft.pipeline.batch import process_batch, read_input, write_output
-from tabletcraft.pipeline.metrics import SessionMetrics, Timer
+from cuneiscribe.pipeline.batch import process_batch, read_input, write_output
+from cuneiscribe.pipeline.metrics import SessionMetrics, Timer
 
 
 class TestBatchProcessing:

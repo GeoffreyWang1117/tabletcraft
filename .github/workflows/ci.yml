@@ -27,7 +27,7 @@ jobs:
 
       - name: Lint
         run: |
-          ruff check tabletcraft/ tests/ --select E,F,W --ignore E501
+          ruff check cuneiscribe/ tests/ --select E,F,W --ignore E501
 
       - name: Test
         run: |
@@ -45,7 +45,7 @@ jobs:
       - name: Verify sign table
         run: |
           python -c "
-          from tabletcraft.knowledge.cuneiform import CuneiformConverter
+          from cuneiscribe.knowledge.cuneiform import CuneiformConverter
           c = CuneiformConverter()
           assert c.num_signs >= 14000, f'Sign table too small: {c.num_signs}'
           # Regression: key signs must exist

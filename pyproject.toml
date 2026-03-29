@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tabletcraft"
+name = "cuneiscribe"
 version = "0.2.0"
 description = "Turn any text into cuneiform clay tablets - translate, transliterate, and render ancient Mesopotamian writing"
 readme = "README.md"
@@ -36,12 +36,12 @@ serve = ["gradio>=4.0", "fastapi", "uvicorn"]
 dev = ["pytest", "black", "ruff"]
 
 [project.scripts]
-tabletcraft = "tabletcraft.interfaces.cli:main"
+cuneiscribe = "cuneiscribe.interfaces.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/geoffreywang1117/tabletcraft"
-Documentation = "https://github.com/geoffreywang1117/tabletcraft#readme"
+Homepage = "https://github.com/geoffreywang1117/cuneiscribe"
+Documentation = "https://github.com/geoffreywang1117/cuneiscribe#readme"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["tabletcraft*"]
+include = ["cuneiscribe*"]

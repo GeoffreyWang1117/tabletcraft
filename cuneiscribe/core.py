@@ -1,4 +1,4 @@
-"""TabletCraft: end-to-end pipeline with confidence gating.
+"""CuneiScribe: end-to-end pipeline with confidence gating.
 
 The core orchestrator routes inputs through classification → translation →
 validation → conversion → rendering, with graceful degradation at each step.
@@ -7,11 +7,11 @@ validation → conversion → rendering, with graceful degradation at each step.
 from dataclasses import dataclass, field
 from typing import Optional, List
 
-from tabletcraft.pipeline.classifier import classify, InputType
-from tabletcraft.pipeline.validator import validate
-from tabletcraft.models.translator import AkkadianTranslator
-from tabletcraft.knowledge.cuneiform import CuneiformConverter
-from tabletcraft.interfaces.renderer import TabletRenderer
+from cuneiscribe.pipeline.classifier import classify, InputType
+from cuneiscribe.pipeline.validator import validate
+from cuneiscribe.models.translator import AkkadianTranslator
+from cuneiscribe.knowledge.cuneiform import CuneiformConverter
+from cuneiscribe.interfaces.renderer import TabletRenderer
 
 
 @dataclass
@@ -28,11 +28,11 @@ class CraftResult:
     suggestion: str = "render"  # "render", "render_with_caveat", "fallback"
 
 
-class TabletCraft:
+class CuneiScribe:
     """End-to-end pipeline with confidence gating.
 
     Usage:
-        tc = TabletCraft(model_path="models/byt5-base-akkadian")
+        tc = CuneiScribe(model_path="models/byt5-base-akkadian")
         result = tc.craft("The king rules the land")
 
         # result.confidence > 0.7 → safe to display

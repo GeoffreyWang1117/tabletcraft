@@ -1,4 +1,4 @@
-"""Gradio web demo for TabletCraft with confidence gating."""
+"""Gradio web demo for CuneiScribe with confidence gating."""
 
 from typing import Optional
 
@@ -6,17 +6,17 @@ from typing import Optional
 def create_demo(model_path: Optional[str] = None):
     """Create a Gradio demo with 4-panel display and confidence gating."""
     import gradio as gr
-    from tabletcraft.knowledge.cuneiform import CuneiformConverter
-    from tabletcraft.interfaces.renderer import TabletRenderer
-    from tabletcraft.pipeline.classifier import classify
-    from tabletcraft.pipeline.validator import validate
+    from cuneiscribe.knowledge.cuneiform import CuneiformConverter
+    from cuneiscribe.interfaces.renderer import TabletRenderer
+    from cuneiscribe.pipeline.classifier import classify
+    from cuneiscribe.pipeline.validator import validate
 
     conv = CuneiformConverter()
     renderer = TabletRenderer(width=600, font_size=30, chars_per_line=18)
 
     translator = None
     if model_path:
-        from tabletcraft.models.translator import AkkadianTranslator
+        from cuneiscribe.models.translator import AkkadianTranslator
         translator = AkkadianTranslator(model_path)
 
     def transliterate_tab(transliteration: str):
@@ -63,12 +63,12 @@ def create_demo(model_path: Optional[str] = None):
         return translator.to_english(akkadian_text)
 
     with gr.Blocks(
-        title="TabletCraft",
+        title="CuneiScribe",
         theme=gr.themes.Soft(),
     ) as demo:
         gr.Markdown(
             """
-            # TabletCraft
+            # CuneiScribe
             ### Bridging a 4,000-year cultural gap
 
             Read ancient tablets or write your own messages in cuneiform.
@@ -149,7 +149,7 @@ def create_demo(model_path: Optional[str] = None):
         gr.Markdown(
             """
             ---
-            **TabletCraft** | All outputs are machine-generated approximations.
+            **CuneiScribe** | All outputs are machine-generated approximations.
             Consult Assyriological expertise for research or public-facing use.
             """
         )

@@ -13,7 +13,7 @@ import time
 from collections import Counter
 from dataclasses import dataclass, field
 
-logger = logging.getLogger("tabletcraft.metrics")
+logger = logging.getLogger("cuneiscribe.metrics")
 
 
 @dataclass
