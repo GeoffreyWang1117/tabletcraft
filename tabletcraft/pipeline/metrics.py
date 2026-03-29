@@ -10,10 +10,8 @@ Tracks key reliability indicators:
 import json
 import logging
 import time
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass, field
-from typing import Optional
-from pathlib import Path
 
 logger = logging.getLogger("tabletcraft.metrics")
 

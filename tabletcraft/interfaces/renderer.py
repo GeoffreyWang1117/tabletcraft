@@ -1,9 +1,6 @@
 """Render cuneiform text as clay tablet images (SVG/PNG)."""
 
-import math
-import textwrap
-from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 try:
     import svgwrite

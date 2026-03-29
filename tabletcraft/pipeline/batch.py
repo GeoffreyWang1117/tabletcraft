@@ -4,8 +4,7 @@ import csv
 import json
 import logging
 from pathlib import Path
-from typing import List, Optional, Union
-from dataclasses import asdict
+from typing import List, Optional
 
 from tabletcraft.pipeline.classifier import classify
 from tabletcraft.pipeline.validator import validate

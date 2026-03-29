@@ -125,7 +125,7 @@ def main():
             print(f"Confidence:     {result.confidence:.2f}")
             print(f"Suggestion:     {result.suggestion}")
             if result.warnings:
-                print(f"Warnings:")
+                print("Warnings:")
                 for w in result.warnings:
                     print(f"  - {w}")
             if result.image:
@@ -140,7 +140,7 @@ def main():
         print(f"Confidence: {result.confidence:.2f}")
         print(f"Mode:       {result.suggested_mode}")
         if result.warnings:
-            print(f"Warnings:")
+            print("Warnings:")
             for w in result.warnings:
                 print(f"  - {w}")
 
